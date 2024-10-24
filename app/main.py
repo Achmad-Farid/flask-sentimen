@@ -5,6 +5,8 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import pickle
+import uvicorn
+import os
 
 # Load the model and tokenizer
 model = load_model('./ai/sentiment_model.h5')
@@ -32,3 +34,7 @@ async def predict_sentiment(request: CommentRequest):
     sentiment_label = 'Positive' if sentiment == 1 else 'Negative'
     
     return {"sentiment": sentiment_label}
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8080))
+    uvicorn.run("your_fastapi_module_name:app", host="0.0.0.0", port=port)
