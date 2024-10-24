@@ -35,6 +35,3 @@ async def predict_sentiment(request: CommentRequest):
     
     return {"sentiment": sentiment_label}
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8080))
-    uvicorn.run("your_fastapi_module_name:app", host="0.0.0.0", port=port)
