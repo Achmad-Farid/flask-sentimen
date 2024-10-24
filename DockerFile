@@ -4,14 +4,14 @@ FROM python:3.11
 # Set working directory
 WORKDIR /app
 
-# Menyalin file requirements.txt ke dalam container
-COPY requirements.txt .
+# Menyalin file requirements.txt ke dalam container dari folder app
+COPY app/requirements.txt .
 
 # Menginstal dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Menyalin seluruh kode aplikasi ke dalam container
-COPY . .
+# Menyalin seluruh kode aplikasi dari folder app ke dalam container
+COPY app .
 
 # Meng-expose port yang akan digunakan
 EXPOSE 8000
