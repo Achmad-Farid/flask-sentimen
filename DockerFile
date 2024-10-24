@@ -1,20 +1,35 @@
-# Menggunakan image Python yang sesuai
-FROM python:3.11
+# Gunakan image base python yang cocok dengan TensorFlow
+FROM python:3.9-slim
 
-# Set working directory
+# Install dependencies untuk TensorFlow
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libopenblas-dev \
+    liblapack-dev \
+    libjpeg-dev \
+    python3-dev \
+    libhdf5-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Buat dan aktifkan virtual environment
 WORKDIR /app
+RUN python3 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
-# Menyalin file requirements.txt ke dalam container dari folder app
-COPY app/requirements.txt .
+# Salin file requirements.txt ke dalam container
+COPY ./app/requirements.txt /app/requirements.txt
 
-# Menginstal dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Update pip dan install dependencies
+RUN pip install --upgrade pip
+RUN pip install -r /app/requirements.txt
 
-# Menyalin seluruh kode aplikasi dari folder app ke dalam container
-COPY app .
+# Salin semua file aplikasi
+COPY ./app /app
 
-# Meng-expose port yang akan digunakan
-EXPOSE 8000
-
-# Menjalankan aplikasi FastAPI
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+# Jalankan aplikasi menggunakan uvicorn
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
